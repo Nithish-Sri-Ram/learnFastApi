@@ -1,0 +1,12 @@
+POST http://localhost:8000/bands/
+Content-Type: application/json
+
+{
+    "name": "The Beatles",
+    "genre": "Rock"
+}
+    ### we could also also send the albums since the base calss has it 
+
+###
+
+GET http://localhost:8000/bands

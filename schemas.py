@@ -1,11 +1,18 @@
 from enum import Enum
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 from datetime import date
 
 class GenreURLChoices(Enum):
     ROCK ='rock'
     MELODY = 'melody'
     JASS = 'jass'
+    HIP_HOP = 'hip-hop'
+
+#this below class I'm using to validate the input of gneres
+class GenreChoices(Enum):
+    ROCK ='Rock'
+    MELODY = 'Melody'
+    JASS = 'Jass'
     HIP_HOP = 'Hip-Hop'
 
 # the next below step is to limit the outputs
@@ -15,11 +22,23 @@ class Album(BaseModel):
     release_date: date
 
 
-# the below class is used to define the schema of the data that we are going to return aand it is inherited from BaseModel of pydantic
-class Band(BaseModel):
-    # {'id':1,'name':'Nithish','genre':'Melody'},
-    id: int
+# Instead of this single model we are going to have a variety of models
+# class Band(BaseModel):
+#     id: int
+#     name: str
+#     genre: str
+#     albums: list[Album] = []
+
+
+class BandBase(BaseModel):
     name: str
-    genre: str
+    genre: GenreChoices
     albums: list[Album] = []
 
+class BandCreate(BandBase):
+    @validator('genre',pre=True)
+    def title_case_genre(cls, value):
+        return value.title()        #RoCk -> Rock
+
+class BandWithId(BandBase):
+    id: int
